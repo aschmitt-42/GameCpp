@@ -14,7 +14,7 @@ class Ball
 		float	ballSpeedX;
 		float	ballSpeedY;
 	public :
-
+		Ball(int x, int y, int radius, int speedX, int speedY);
 
 };
 

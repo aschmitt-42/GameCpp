@@ -29,6 +29,12 @@ int main() {
     int n = 0;
     SetTargetFPS(144);  // Limite à 144 FPS
 
+    // Couleur initiale du fond (beige/jaune clair)
+    int redColorValue = 255;   // La composante rouge reste à 255
+    int greenColorValue = 255; // La composante verte commence à 255 (beige/jaune clair)
+    int blueColorValue = 200;  // La composante bleue reste fixe à 200 pour garder un ton chaud
+    int decrementValue = 50; 
+
     while (!WindowShouldClose()) {
         // Déplacer la balle
 
@@ -97,11 +103,13 @@ int main() {
             if (ballSpeedX < 0) ballSpeedX -= 0.5f;  // Si la balle va vers la gauche
             else ballSpeedX += 0.5f;
             a = 0;
+            if (greenColorValue > 0) greenColorValue -= decrementValue;
         }
         
         
         BeginDrawing();
-        ClearBackground(GREEN);
+        // ClearBackground(GREEN);
+        ClearBackground((Color){ (unsigned char)redColorValue, (unsigned char)greenColorValue, (unsigned char)blueColorValue, 255 });
 
         // Dessiner la balle
         DrawCircle(ballPosX, ballPosY, ballRadius, RED);

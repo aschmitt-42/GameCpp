@@ -11,14 +11,15 @@
 class Game 
 {
     private :
-        Player  Player_1;
-        Player  Player_2;
+        Player  &Player_1;
+        Player  &Player_2;
         Ball    Balle;
         int     width;
         int     height;
         int     score;
+        int     a;
     public :
-
+        Game(int width, int height);
 
 };
 
