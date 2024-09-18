@@ -3,7 +3,8 @@
 
 # include "iostream"
 # include "raylib.h"
-
+# include <chrono>
+# include <thread>
 class Game 
 {
     private :

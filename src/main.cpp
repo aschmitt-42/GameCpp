@@ -12,8 +12,8 @@ int main() {
     int ballPosY = 300;
     int ballRadius = 20;
 
-    float ballSpeedX = 2;
-    float ballSpeedY = 2;
+    float ballSpeedX = 2.0f;
+    float ballSpeedY = 2.0f;
 
     // initialisation pour les joueurs 
     int posX = 10;
@@ -23,14 +23,31 @@ int main() {
     int speed = 5;  // Vitesse de déplacement
     int paddleWidth = 100;   // Largeur des raquettes (hauteur du rectangle)
     int paddleHeight = 10;   // Hauteur des raquettes (largeur du rectangle)
-    
-    float speedIncrement = 0.5f;  // Incrément de la vitesse après chaque collision
+    int a = 1;
+    // float speedIncrement = 0.5f;  // Incrément de la vitesse après chaque collision
 
     int n = 0;
     SetTargetFPS(144);  // Limite à 144 FPS
 
     while (!WindowShouldClose()) {
         // Déplacer la balle
+
+        if (ballPosX < 0 || ballPosX > 800)
+        {
+            BeginDrawing();
+            ClearBackground(GREEN);
+            DrawCircle(ballPosX, ballPosY, ballRadius, RED);
+            DrawRectangle(posX, posY, paddleHeight, paddleWidth, YELLOW);  // Joueur 1
+            DrawRectangle(posx, posy, paddleHeight, paddleWidth, YELLOW);  // Joueur 2
+            DrawText(TextFormat("END BANDE DE NULL"), 150, 275, 50, BLACK);
+            EndDrawing();
+            std::this_thread::sleep_for(std::chrono::seconds(3));
+            ballPosX = 400;
+            ballPosY = 300;
+            ballSpeedX = 2.0f;
+            ballSpeedY = 2.0f;
+            n = 0;
+        }
         ballPosX += ballSpeedX;
         ballPosY += ballSpeedY;
 
@@ -58,24 +75,31 @@ int main() {
         // Collision avec la raquette gauche (joueur 1)
         if (ballPosX - ballRadius <= posX + paddleHeight &&   // Si la balle touche le bord droit de la raquette
             ballPosY >= posY && ballPosY <= posY + paddleWidth) {  // Si la balle est à la bonne hauteur
-            std::cout << "ball speed : " << ballSpeedX << std::endl;
             ballSpeedX *= -1;  // Inverser la direction horizontale
+            if (ballPosY >= posY + (paddleWidth / 2) )
+                ballSpeedY *= -1;
             n++;
+            a = 1;
         }
         
         // Collision avec la raquette droite (joueur 2)
         if (ballPosX + ballRadius >= posx &&   // Si la balle touche le bord gauche de la raquette
             ballPosY >= posy && ballPosY <= posy + paddleWidth) {  // Si la balle est à la bonne hauteur
-            std::cout << "ball speed droite : " << ballSpeedX << std::endl;
             ballSpeedX *= -1;  // Inverser la direction horizontale
+            if (ballPosY >= posy + (paddleWidth / 2) )
+                ballSpeedY *= -1;
             n++;
+            a = 1;
         }
 
-        if (n == 10)
+        if (n && n%5 == 0 && a)
         {
-            if (ballSpeedX < 0) ballSpeedX -= speedIncrement;  // Si la balle va vers la gauche
-            else ballSpeedX += speedIncrement;
+            if (ballSpeedX < 0) ballSpeedX -= 0.5f;  // Si la balle va vers la gauche
+            else ballSpeedX += 0.5f;
+            a = 0;
         }
+        
+        
         BeginDrawing();
         ClearBackground(GREEN);
 
@@ -85,8 +109,9 @@ int main() {
         // Dessiner les raquettes
         DrawRectangle(posX, posY, paddleHeight, paddleWidth, YELLOW);  // Joueur 1
         DrawRectangle(posx, posy, paddleHeight, paddleWidth, YELLOW);  // Joueur 2
-
+        DrawText(TextFormat("%d", n), 400, 275, 50, WHITE);
         EndDrawing();
+
     }
 
     CloseWindow();
