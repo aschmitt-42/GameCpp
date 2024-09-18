@@ -10,7 +10,7 @@ INCDIR      = inc/
 RAYLIB_LIB  = inc/raylib/src/libraylib.a
 
 
-FILES       = main
+FILES       = test
 
 SRC         = $(addprefix $(SRCDIR)/, $(FILES:=.cpp))
 OBJ         = $(addprefix $(OBJDIR)/, $(FILES:=.o))
