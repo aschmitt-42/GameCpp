@@ -1,8 +1,9 @@
-#include "Game.hpp"
-# include "raylib.h"
-
 
 #include "raylib.h"
+
+# include "iostream"
+# include <chrono>
+# include <thread>
 
 int main() {
     InitWindow(800, 600, "Balle rebondissante");
@@ -56,9 +57,13 @@ int main() {
         }
         ballPosX += ballSpeedX;
         ballPosY += ballSpeedY;
-
+        std::cout << "vitesse balle : " << ballSpeedX << "  "<< ballSpeedY << std::endl;
         // Rebondir sur les bords supérieur et inférieur
-        if (ballPosY >= 600 - ballRadius || ballPosY <= ballRadius) ballSpeedY *= -1;
+        if (ballPosY >= 600 - ballRadius || ballPosY <= ballRadius) 
+        {
+            ballSpeedY *= -1;
+            std::cout << "--------------- "  << std::endl;
+        }
 
         // Détection des touches pour les deux joueurs
         if (IsKeyDown(KEY_UP)) {

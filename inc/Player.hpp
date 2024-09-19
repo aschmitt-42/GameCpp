@@ -18,7 +18,19 @@ class Player
         
     public :
         Player(int x, int y, int num, std::string name);
-        Player& Player::operator=(const Player &tmp);
+        ~Player();
+        Player& operator=(const Player &tmp);
+        int GetX();
+        int GetY();
+        int GetScore();
+        int GetSpeed();
+        std::string GetName();
+        int GetHeight();
+        int GetWidth();
+
+        
+        void    Up();
+        void    Down();
 };
 
 #endif

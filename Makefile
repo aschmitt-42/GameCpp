@@ -10,11 +10,11 @@ INCDIR      = inc/
 RAYLIB_LIB  = inc/raylib/src/libraylib.a
 
 
-FILES       = test
+FILES       = Player  main  Game  Ball 
 
 SRC         = $(addprefix $(SRCDIR)/, $(FILES:=.cpp))
 OBJ         = $(addprefix $(OBJDIR)/, $(FILES:=.o))
-HEADER      = $(INCDIR)Game.hpp
+HEADER      = $(INCDIR)Game.hpp $(INCDIR)Player.hpp $(INCDIR)Ball.hpp 
 
 MAKE_LIB = $(MAKE) -C $(INCDIR)raylib/src
 
