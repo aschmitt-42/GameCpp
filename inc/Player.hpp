@@ -11,7 +11,7 @@ class Player
         int posY;
         int speed = 5;
         int Width = 100;
-        int Height = 10;
+        int Height = 41;
         int score = 0;
         int num;
         std::string name;
@@ -27,7 +27,6 @@ class Player
         std::string GetName();
         int GetHeight();
         int GetWidth();
-
         
         void    Up();
         void    Down();

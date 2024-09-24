@@ -18,6 +18,10 @@ class Game
         int     height;
         int     score;
         int     a;
+        int     end;
+        Texture2D Texture1;
+        Texture2D Texture2;
+
     public :
         Game(int width, int height);
         ~Game();
