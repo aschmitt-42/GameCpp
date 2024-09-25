@@ -21,7 +21,8 @@ class Game
         int     end;
         Texture2D Texture1;
         Texture2D Texture2;
-
+        Color BackColor;
+        
     public :
         Game(int width, int height);
         ~Game();
@@ -32,6 +33,8 @@ class Game
         void CollisionHautBas();
         void Draw();
         void Incrementation();
+        void StartPlayer();
+        void SaisieNoms(std::string &nomJoueur1, std::string &nomJoueur2);
 };
 
 #endif

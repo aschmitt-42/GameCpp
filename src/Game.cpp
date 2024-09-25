@@ -1,79 +1,138 @@
 #include "Game.hpp"
 
+
 Game::Game(int width, int height)
 {
-    this->Player_1 = new Player(10, height / 2, 1, "jean");
-    this->Player_2 = new Player(width - 10 - 41, height / 2 , 2, "anouk");
-    this->Balle = new Ball(400, 300, 15 , 2.0f, 2.0f);
     this->width = width;
     this->height = height;
-    this->score = 0;
-    this->a = 1;
-    this->end = 0;
+    this->BackColor = (Color){ (unsigned char)255, (unsigned char)100, (unsigned char)200, 255 };
     InitWindow(this->width, this->height, "Balle rebondissante");
     SetTargetFPS(144);
+
+    this->end = 0;
+    this->StartPlayer();
+    this->Balle = new Ball(400, 300, 15 , 2.0f, 2.0f);
+    this->score = 0;
+    this->a = 1;
+    
+    
+    
+}
+
+void Game::StartPlayer()
+{
     this->Texture2 = LoadTexture("assets/image2.png");
     this->Texture1 = LoadTexture("assets/image1.png");
+
+    std::string nomJoueur1, nomJoueur2;
+    this->SaisieNoms(nomJoueur1, nomJoueur2);
+
+    this->Player_1 = new Player(10, this->height / 2, this->Texture1.height, this->Texture1.width, 1, nomJoueur1);
+    this->Player_2 = new Player(width - 10 - this->Texture2.width, this->height / 2, this->Texture2.height, this->Texture2.width, 2, nomJoueur2);
+}
+
+void Game::SaisieNoms(std::string &nomJoueur1, std::string &nomJoueur2) 
+{
+    char joueur1[100] = "\0";  // Pour stocker le nom du joueur 1
+    char joueur2[100] = "\0";  // Pour stocker le nom du joueur 2
+    int letterCount1 = 0;
+    int letterCount2 = 0;
+
+    bool joueur1Saisi = false;
+    bool joueur2Saisi = false;
+    Color TextColor = (Color){ 50, 50, 50, 255 };        // Couleur du texte
+    Color InputTextColor = (Color){ 0, 0, 0, 255 };      // Texte entré par l'utilisateur
+    Color BorderColor = (Color){ 200, 200, 200, 255 };   // Bordures des champs
+
+    while ((!joueur1Saisi || !joueur2Saisi) && !WindowShouldClose()) {
+        BeginDrawing();
+        ClearBackground(BackColor);
+
+        // Texte pour le joueur 1
+        DrawText("Entrez le nom du joueur 1:", 100, 100, 20, TextColor);
+        DrawRectangleLines(95, 145, 300, 40, BorderColor); // Bordure du champ de texte
+        DrawText(joueur1, 100, 150, 30, InputTextColor);   // Affiche le nom saisi
+        if (joueur1Saisi) {
+            DrawText("Nom du joueur 1 saisi!", 100, 200, 20, GREEN);
+        }
+
+        // Texte pour le joueur 2
+        DrawText("Entrez le nom du joueur 2:", 100, 300, 20, TextColor);
+        DrawRectangleLines(95, 345, 300, 40, BorderColor); // Bordure du champ de texte
+        DrawText(joueur2, 100, 350, 30, InputTextColor);   // Affiche le nom saisi
+        if (joueur2Saisi) {
+            DrawText("Nom du joueur 2 saisi!", 100, 400, 20, GREEN);
+        }
+
+        // Saisie du nom du joueur 1
+        if (!joueur1Saisi) {
+            int key = GetCharPressed();
+            while (key > 0) {
+                if ((key >= 32) && (key <= 125) && (MeasureText(joueur1, 30) < 280)) {
+                    joueur1[letterCount1] = (char)key;
+                    joueur1[letterCount1 + 1] = '\0';
+                    letterCount1++;
+                }
+                key = GetCharPressed();
+            }
+
+            if (IsKeyPressed(KEY_BACKSPACE)) {
+                letterCount1--;
+                if (letterCount1 < 0) letterCount1 = 0;
+                joueur1[letterCount1] = '\0';
+            }
+
+            if (IsKeyPressed(KEY_ENTER) && letterCount1 > 0) {
+                joueur1Saisi = true;
+                nomJoueur1 = joueur1;  // Sauvegarder le nom
+            }
+        }
+
+        // Saisie du nom du joueur 2
+        if (joueur1Saisi && !joueur2Saisi) {
+            int key = GetCharPressed();
+            while (key > 0) {
+                if ((key >= 32) && (key <= 125) && (MeasureText(joueur2, 30) < 280)) {
+                    joueur2[letterCount2] = (char)key;
+                    joueur2[letterCount2 + 1] = '\0';
+                    letterCount2++;
+                }
+                key = GetCharPressed();
+            }
+
+            if (IsKeyPressed(KEY_BACKSPACE)) {
+                letterCount2--;
+                if (letterCount2 < 0) letterCount2 = 0;
+                joueur2[letterCount2] = '\0';
+            }
+
+            if (IsKeyPressed(KEY_ENTER) && letterCount2 > 0) {
+                joueur2Saisi = true;
+                nomJoueur2 = joueur2;  // Sauvegarder le nom
+            }
+        }
+
+        EndDrawing();
+    }
+    if (!joueur1Saisi || !joueur2Saisi) {
+        this->end = 1;
+        nomJoueur1 = "j";
+        nomJoueur2 = "j";
+    }
 }
 
 Game::~Game()
 {
-    delete Player_1;
-    delete Player_2;
-    delete Balle;
-    // UnloadTexture(this->paddleTexture);
+    if (Player_1)
+        delete Player_1;
+    if (Player_2)
+        delete Player_2;
+    if (Balle)
+        delete Balle;
+    // UnloadTexture(this->Texture1);
+    // UnloadTexture(this->Texture2);
 }
 
-// void Game::restart()
-// {
-//     const char* text = "LOOSER";
-//     int textHeight = 50;
-//     int textWidth = MeasureText(text, textHeight);
-
-//     Color buttonColor = LIGHTGRAY;
-//     Color textColor = BLACK;
-    
-
-//     // Définir la position et la taille du bouton
-//     Rectangle button = { 350, 250, 100, 50 }; // x, y, width, height
-//     const char* buttonText = "Cliquez-moi";
-//     int te = MeasureText(buttonText, 20);
-//     bool isHover = CheckCollisionPointRec(GetMousePosition(), button);
-
-//     BeginDrawing();
-//     ClearBackground(RED);
-    
-//     DrawTexture(Texture1, Player_1->GetX(), Player_1->GetY(), RED);
-//     DrawTexture(Texture2, Player_2->GetX(), Player_2->GetY(), RED);
-
-//     DrawCircle(Balle->GetX(), Balle->GetY(), Balle->GetRadius(), BLACK);
-    
-//     DrawRectangleRec(button, buttonColor);
-    
-//     DrawText(buttonText, button.x + (button.width - te) / 2, button.y + 15, 15, textColor);
-
-//     DrawText(TextFormat("LOOSER"), (width - textWidth) / 2, (height - textHeight) / 2, textHeight, BLACK); // 200 275
-//     EndDrawing();
-    
-//     while (!WindowShouldClose())
-//     {
-//         isHover = CheckCollisionPointRec(GetMousePosition(), button);
-//         if (isHover) 
-//         {
-            
-//             buttonColor = GRAY; // Couleur du bouton au survol
-//             if (IsMouseButtonPressed(MOUSE_LEFT_BUTTON)) {
-//                 std::cout << "bouton cliqué" << std::endl;
-//                 break;
-//             }
-//         }
-//         else {
-//             buttonColor = LIGHTGRAY; // Couleur par défaut
-//         }
-//     }
-//     Balle->restart();
-//     score = 0;
-// }
 
 void Game::restart()
 {
@@ -84,54 +143,44 @@ void Game::restart()
     Color buttonColor = LIGHTGRAY;
     Color textColor = BLACK;
 
-    // Définir la position et la taille du bouton
     Rectangle button = { 350, 300, 100, 50 }; // x, y, width, height
     const char* buttonText = "REPLAY";
-    int te = MeasureText(buttonText, 15);
+    int te = MeasureText(buttonText, 20);
+    bool isHover = CheckCollisionPointRec(GetMousePosition(), button);
 
-    // Boucle de rendu et détection du clic sur le bouton
-    while (!WindowShouldClose())
+    while (!WindowShouldClose() && this->end)
     {
-        // Vérifier si la souris est sur le bouton
-        bool isHover = CheckCollisionPointRec(GetMousePosition(), button);
+        
+        isHover = CheckCollisionPointRec(GetMousePosition(), button); // Vérifier si la souris est sur le bouton
 
-        // Changer la couleur du bouton si la souris est dessus
         if (isHover) 
         {
-            buttonColor = GRAY; // Couleur du bouton au survol
-
-            if (IsMouseButtonPressed(MOUSE_LEFT_BUTTON)) 
-            {
-                std::cout << "Bouton cliqué ! Réinitialisation du jeu." << std::endl;
-                break; // Quitter la boucle et relancer le jeu
-            }
+            buttonColor = GRAY;
+            if (IsMouseButtonPressed(MOUSE_LEFT_BUTTON))
+                this->end = 0;
         } 
         else
             buttonColor = LIGHTGRAY;
 
-
-        // Démarrer le dessin
         BeginDrawing();
         ClearBackground(RED);
 
-        // Dessiner les textures des joueurs et la balle
         DrawTexture(Texture1, Player_1->GetX(), Player_1->GetY(), RED);
         DrawTexture(Texture2, Player_2->GetX(), Player_2->GetY(), RED);
         DrawCircle(Balle->GetX(), Balle->GetY(), Balle->GetRadius(), BLACK);
 
-        // Dessiner le bouton
         DrawRectangleRec(button, buttonColor);
-        DrawText(buttonText, button.x + (button.width - te) / 2, button.y + 15, 15, textColor);
+        DrawText(buttonText, button.x + (button.width - te) / 2, button.y + 15, 20, textColor);
 
-        // Dessiner le texte "LOOSER"
         DrawText(text, (width - textWidth) / 2, (height - textHeight) / 2 - 50, textHeight, BLACK);
 
         EndDrawing();
     }
 
-    // Réinitialiser la balle et le score
-    Balle->restart();
-    score = 0;
+    if (this->end == 0) {
+        Balle->restart();
+        score = 0;
+    }
 }
 
 
@@ -188,14 +237,13 @@ void Game::CollisionHautBas()
 
 void Game::Draw()
 {
-    Color fond = (Color){ (unsigned char)255, (unsigned char)100, (unsigned char)200, 255 };
 
     BeginDrawing();
     
-    ClearBackground(fond);
+    ClearBackground(this->BackColor);
 
-    DrawTexture(Texture1, Player_1->GetX(), Player_1->GetY(), fond);
-    DrawTexture(Texture2, Player_2->GetX(), Player_2->GetY(), fond);
+    DrawTexture(Texture1, Player_1->GetX(), Player_1->GetY(), this->BackColor);
+    DrawTexture(Texture2, Player_2->GetX(), Player_2->GetY(), this->BackColor);
 
     DrawCircle(Balle->GetX(), Balle->GetY(), Balle->GetRadius(), BLACK);
 
@@ -214,7 +262,7 @@ void Game::Incrementation()
 
 void Game::run()
 {
-    while (!WindowShouldClose()) {
+    while (!WindowShouldClose() && this->end == 0) {
 
         if (Balle->GetX() < 0 || Balle->GetX() > width) {
             this->end = 1;

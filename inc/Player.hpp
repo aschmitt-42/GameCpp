@@ -10,14 +10,14 @@ class Player
         int posX;
         int posY;
         int speed = 5;
-        int Width = 100;
-        int Height = 41;
+        int Width;
+        int Height;
         int score = 0;
         int num;
         std::string name;
         
     public :
-        Player(int x, int y, int num, std::string name);
+        Player(int x, int y, int w, int h, int num, std::string name);
         ~Player();
         Player& operator=(const Player &tmp);
         int GetX();

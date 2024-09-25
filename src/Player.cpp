@@ -1,9 +1,11 @@
 #include "Player.hpp"
 
-Player::Player(int x, int y, int num, std::string name)
+Player::Player(int x, int y, int w, int h, int num, std::string name)
 {
     this->posX = x;
     this->posY = y;
+    this->Width = w;
+    this->Height = h;
     this->num = num;
     this->name = name;
     this->score = 0;
