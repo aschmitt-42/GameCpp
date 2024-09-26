@@ -2,7 +2,7 @@
 # define BALL_HPP
 
 # include "iostream"
-# include "raylib.h"
+# include "raylib/src/raylib.h"
 
 
 class Ball 

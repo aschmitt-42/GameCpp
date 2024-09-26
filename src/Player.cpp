@@ -41,3 +41,8 @@ void Player::Down() {
     posY += speed;
     if (posY + Width > GetScreenHeight()) posY = GetScreenHeight() - Width;
 };
+
+void    Player::ScoreUpdate()
+{
+    this->score += 1;
+}

@@ -2,9 +2,7 @@
 # define GAME_HPP
 
 # include "iostream"
-# include "raylib.h"
-# include <chrono>
-# include <thread>
+# include "raylib/src/raylib.h"
 # include "Ball.hpp"
 # include "Player.hpp"
 

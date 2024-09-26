@@ -47,8 +47,10 @@ void Ball::BounceY()
 
 void Ball::SpeedUp()
 {
-    if (SpeedX < 0) 
+    if (SpeedX < 0) {
         SpeedX -= 0.5f;
-    else 
+    }
+    else {
         SpeedX += 0.5f;
+    }
 }

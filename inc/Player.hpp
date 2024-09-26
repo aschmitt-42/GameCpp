@@ -2,7 +2,7 @@
 # define PLAYER_HPP
 
 # include "iostream"
-# include "raylib.h"
+# include "raylib/src/raylib.h"
 
 class Player 
 {
@@ -27,6 +27,7 @@ class Player
         std::string GetName();
         int GetHeight();
         int GetWidth();
+        void    ScoreUpdate();
         
         void    Up();
         void    Down();
